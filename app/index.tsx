@@ -5,25 +5,38 @@ import {
   KeyboardAvoidingView, 
   TextInput, 
   TouchableOpacity, 
-  Platform } from "react-native";
+  Platform,
+  Keyboard,
+ } from "react-native";
 import Tasks from "@/components/tasks";
 import React, { useState } from "react";
 
 export default function Index() {
   const [task, setTask] = useState<string>(''); // Change the task name
+  const [taskItems, setTaskItems] = useState<Array<string>>([]); // add task items to array 
 
   const handleAddTask = () => {
-    console.log(task);
+    Keyboard.dismiss(); // close the keyboard
+    setTaskItems([...taskItems, task]); // add new to tasks to existing task array
+    console.log(taskItems);
+    setTask(''); // clear the input field
   }
 
+  const removeTask = (index: number) => {
+    let taskItemsCopy = [...taskItems]; // copy the task items
+    taskItemsCopy.splice(index, 1); // remove the task at index
+    setTaskItems(taskItemsCopy); // set the new task items
+  }
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Tasks:</Text>
       <View style={styles.items}>
         {/* Task list */}
-        <Tasks name="Task 1"/>
-        <Tasks name='Task 2'/>
+        {taskItems.map((item, index)=>{
+          return <Tasks name={item} index={index} removeTask={removeTask}/>
+        })
+      }
       </View>
 
       {/* Add new tasks */}
@@ -65,7 +78,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     position: 'absolute',
     bottom: 40,
-    marginBottom: 10,
+    marginBottom: 20,
   },
   input:{
     paddingHorizontal: 10,

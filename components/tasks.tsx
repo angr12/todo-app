@@ -1,11 +1,20 @@
 import React from "react";
-import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, Task } from "react-native";
 
-export default function Tasks({ name }: { name: string }) {
+interface TaskProps {
+    name: string;
+    index: number;  
+    removeTask:(index: number) => void;
+}
+
+export default function Tasks({ name, index, removeTask }: TaskProps) {
     return(
         <View style={styles.item}>
             <View style={styles.align}>
-                <TouchableOpacity style={styles.button}></TouchableOpacity>
+                <TouchableOpacity 
+                style={styles.button}
+                onPress={() => removeTask(index)}
+                ></TouchableOpacity>
                 <Text style={styles.text}>{name}</Text>
             </View>
             <View>
